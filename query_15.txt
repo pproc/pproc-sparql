@@ -1,0 +1,81 @@
+Budget volume in percentage of contracts awarded by each of the procedures provided for in the legislation.
+
+This question needs to be resolved through multiple queries and calculated later.
+
+1. Total annual of all procedures (open, negotiated and minor):
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+SELECT SUM(distinct ?impAdjudicacionConIVA) 
+WHERE {
+  ?uriCont a pproc:Contract;
+  pproc:contractProcedureSpecifications ?procedureType;
+  pc:tender ?tender.
+  ?tender pproc:formalizedDate ?formalizedDate.
+  ?procedureType pproc:procedureType ?procedimiento.
+  ?tender pproc:offeredPrice ?offeredPriceVAT.
+  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+  FILTER (regex(?formalizedDate, "2014") AND 
+         (?procedimiento = pproc:RegularOpen OR 
+         ?procedimiento = pproc:Negotiated OR 
+         ?procedimiento = pproc:Minor ) )
+}
+
+2. Total annual of open procedures:
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+SELECT SUM(distinct ?impAdjudicacionConIVA)
+WHERE {
+  ?uriCont a pproc:Contract;
+  pproc:contractProcedureSpecifications ?procedureType;
+  pc:tender ?tender.
+  ?tender pproc:formalizedDate ?formalizedDate.
+  ?procedureType pproc:procedureType ?procedimiento.
+  ?tender pproc:offeredPrice ?offeredPriceVAT.
+  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+  FILTER (regex(?formalizedDate, "2014")
+         AND (?procedimiento = pproc:RegularOpen) )
+}
+
+3. Total annual of negotiated procedures:
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+SELECT SUM(distinct ?impAdjudicacionConIVA)
+WHERE {
+  ?uriCont a pproc:Contract;
+  pproc:contractProcedureSpecifications ?procedureType;
+  pc:tender ?tender.
+  ?tender pproc:formalizedDate ?formalizedDate.
+  ?procedureType pproc:procedureType ?procedimiento.
+  ?tender pproc:offeredPrice ?offeredPriceVAT.
+  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+  FILTER (regex(?formalizedDate, "2014")
+         AND (?procedimiento = pproc:Negotiated) )
+}
+
+4. Total annual of minor procedures:
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+SELECT SUM(distinct ?impAdjudicacionConIVA)
+WHERE {
+  ?uriCont a pproc:Contract;
+  pproc:contractProcedureSpecifications ?procedureType;
+  pc:tender ?tender.
+  ?tender pproc:formalizedDate ?formalizedDate.
+  ?procedureType pproc:procedureType ?procedimiento.
+  ?tender pproc:offeredPrice ?offeredPriceVAT.
+  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+  FILTER (regex(?formalizedDate, "2014")
+         AND (?procedimiento = pproc:Minor) )
+}
