@@ -1,0 +1,20 @@
+Total price of contracts by the Ministry of Foreign Affairs and Cooperation
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX s: <http://schema.org/>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+SELECT SUM(distinct ?currencyValue) 
+WHERE {
+  ?uriCont a <http://contsem.unizar.es/def/sector-publico/pproc#Contract> ;
+  pc:tender ?tender ;
+  pproc:contractProcedureSpecifications ?contProcSpec ;
+  pproc:managingDepartment ?managingDepartment .
+  ?managingDepartment dcterms:title ?title .
+  ?tender pproc:formalizedDate ?formalizedDate ;
+  pproc:offeredPrice ?offeredPrice .
+  ?offeredPrice gr:hasCurrencyValue ?currencyValue ;
+  gr:valueAddedTaxIncluded ?taxIncluded .
+  FILTER ( (?taxIncluded) AND regex(?title, "Servicio de Ge", "i"))
+}
