@@ -1,0 +1,17 @@
+URI and names of managing department with most contracts
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+SELECT ?count ?title ?managingDepartment
+WHERE {
+  ?managingDepartment dcterms:title ?title .
+  {
+    SELECT count (distinct ?uriCont) as ?count ?managingDepartment
+    WHERE {
+      ?uriCont a <http://contsem.unizar.es/def/sector-publico/pproc#Contract> ;
+      pproc:managingDepartment ?managingDepartment
+    }
+    GROUP BY ?managingDepartment
+  }
+}
+ORDER BY desc(?count)
