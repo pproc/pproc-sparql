@@ -1,0 +1,64 @@
+A list of all contracts awarded by the City, classified by type and amount, indicating the object, the amount of the bid, the award and the final cost, the procedure for the award, the instruments through which have been published where appropriate, the number of participating tenders, the awarded tenders, the duration or timing of planned and actual implementation, modifications, and any other information of special interest to the public.
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX s: <http://schema.org/>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT DISTINCT ?contrato ?nombreContrato ?type ?adjudicatario ?duracion 
+?impLicitacionSinIVA ?impLicitacionConIVA ?impAdjudicacionSinIVA 
+?impAdjudicacionConIVA ?procedimiento ?instrumentos ?numLicitadores 
+WHERE {
+  {
+    SELECT DISTINCT ?contrato ?nombreContrato ?type ?adjudicatario ?duracion 
+    ?impLicitacionSinIVA ?impLicitacionConIVA ?impAdjudicacionSinIVA 
+    ?impAdjudicacionConIVA ?procedimiento ?instrumentos 
+    WHERE {
+      ?contrato a pproc:Contract;
+      a ?type;
+      dcterms:title ?nombreContrato;
+      pproc:contractObject ?contractObject;
+      pc:contractingAuthority ?contractingAuthority;
+      pc:tender ?tender;
+      pproc:duration ?duracion.
+      ?tender a pproc:FormalizedTender;
+      pproc:formalizedDate ?formalizedDate;
+      pproc:supplier ?supplier.
+      ?supplier s:name ?adjudicatario.
+      ?contractObject pproc:contractEconomicConditions ?contractEconomicConditions.
+      ?contractEconomicConditions pproc:budgetPrice ?budgetPriceNOVAT;
+      pproc:budgetPrice ?budgetPriceVAT.
+      ?budgetPriceNOVAT gr:hasCurrencyValue ?impLicitacionSinIVA;
+      gr:valueAddedTaxIncluded "false"^^xsd:boolean.
+      ?budgetPriceVAT gr:hasCurrencyValue ?impLicitacionConIVA;
+      gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+      ?tender pproc:offeredPrice ?offeredPriceNOVAT;
+      pproc:offeredPrice ?offeredPriceVAT.
+      ?offeredPriceNOVAT gr:hasCurrencyValue ?impAdjudicacionSinIVA;
+      gr:valueAddedTaxIncluded "false"^^xsd:boolean.
+      ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+      gr:valueAddedTaxIncluded "true"^^xsd:boolean.
+      ?contrato pproc:contractProcedureSpecifications ?procedureType.
+      ?procedureType pproc:procedureType ?procedimiento.
+      OPTIONAL {
+        ?procedureType pproc:notice ?instrumentos
+      }.
+      FILTER (regex(?formalizedDate, "2014") AND 
+             (?type = pproc:ServicesContract OR 
+             ?type = pproc:WorksContract OR ?type = pproc:SuppliesContract))
+    }
+  }
+  {
+    SELECT DISTINCT ?contrato count(?tender) AS ?numLicitadores
+    WHERE {
+      ?contrato a pproc:Contract;
+      a ?type;
+      pc:tender ?tender.
+      FILTER ((?type = pproc:ServicesContract OR 
+             ?type = pproc:WorksContract OR 
+             ?type = pproc:SuppliesContract))
+      }
+      GROUP BY ?contrato
+  }
+}
