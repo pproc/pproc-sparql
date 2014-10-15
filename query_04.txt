@@ -1,0 +1,8 @@
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#> 
+SELECT ?procedureType count(distinct ?contract) as ?num
+WHERE {
+  ?contract a pproc:Contract
+. ?contract pproc:contractProcedureSpecifications ?cpe
+. ?cpe pproc:procedureType ?procedureType
+}
+GROUP BY (?procedureType)
