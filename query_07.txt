@@ -1,0 +1,14 @@
+Average and disaggregated time needed to resolve a tender
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+SELECT distinct ?uriCont ?tenderDossierStartDate ?awardDate ?formalizedDate
+WHERE {
+  ?uriCont a pproc:Contract ;
+  pproc:contractProcedureSpecifications ?contractProcedureSpecifications ;
+  pc:tender ?tender .
+  ?contractProcedureSpecifications pproc:tenderDossierStartDate ?tenderDossierStartDate .
+  ?tender pproc:awardDate ?awardDate ;
+  pproc:formalizedDate ?formalizedDate .
+}
