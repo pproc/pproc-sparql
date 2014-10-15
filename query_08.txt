@@ -1,18 +1,12 @@
-List of steps taken by a contract
+Number of formalized contracts between 11/11/2011 and the current date
 
 PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
-PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX s: <http://schema.org/>
 PREFIX pc: <http://purl.org/procurement/public-contracts#>
-SELECT distinct ?uriCont ?tenderDossierStartDate ?awardDate ?formalizedDate
+SELECT DISTINCT ?uriCont ?formalizedDate 
 WHERE {
   ?uriCont a <http://contsem.unizar.es/def/sector-publico/pproc#Contract> ;
-  pproc:contractProcedureSpecifications ?contractProcedureSpecifications ;
   pc:tender ?tender .
-  ?contractProcedureSpecifications pproc:tenderDossierStartDate ?tenderDossierStartDate .
-  OPTIONAL {
-    ?tender pproc:awardDate ?awardDate 
-  } .
-  OPTIONAL {
-    ?tender pproc:formalizedDate ?formalizedDate 
-  }
+  ?tender pproc:formalizedDate ?formalizedDate 
+  FILTER (( ?formalizedDate < now() ) AND (?formalizedDate > "2011-11-11"^^xsd:date))
 }
