@@ -1,0 +1,23 @@
+Actual price of all the contracts started, awarded or formalized in 2011, 2012 and 2013
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX s: <http://schema.org/>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+SELECT SUM(distinct ?currencyValue) 
+WHERE {
+  ?uriCont a pproc:Contract ;
+  pc:tender ?tender .
+  ?tender pproc:formalizedDate ?formalizedDate ;
+  a pproc:FormalizedTender ;
+  pproc:supplier ?supplier ;
+  pproc:offeredPrice ?offeredPrice .
+  ?supplier s:name ?name .
+  ?offeredPrice gr:hasCurrencyValue ?currencyValue ;
+  gr:valueAddedTaxIncluded ?taxIncluded .
+  FILTER ( (?taxIncluded) AND 
+    (regex(year(?formalizedDate),"2012") OR 
+    regex(year(?formalizedDate),"2013") OR 
+    regex(year(?formalizedDate),"2014")) 
+  )
+}
