@@ -1,3 +1,5 @@
+Count of contracts by type
+
 PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#> 
 SELECT ?contractType count(distinct ?contract) as ?num
 WHERE {
