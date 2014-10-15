@@ -1,0 +1,15 @@
+List of suppliers that have worked with public authorities in the year 2014
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX s: <http://schema.org/>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+SELECT DISTINCT ?name
+WHERE {
+  ?uriCont a pproc:Contract ;
+  pc:tender ?tender .
+  ?tender pproc:awardDate ?awardDate ;
+  pproc:supplier ?supplier .
+  ?supplier s:name ?name
+  FILTER regex(?awardDate, "2014")
+}
+ORDER BY ?supplier
