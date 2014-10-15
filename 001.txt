@@ -1,0 +1,14 @@
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#> 
+PREFIX dcterms: <http://purl.org/dc/terms/> 
+PREFIX gr: <http://purl.org/goodrelations/v1#> 
+SELECT ?title ?budgetPrice
+WHERE {
+  ?contract a pproc:WorksContract
+. ?contract dcterms:title ?title
+. ?contract pproc:contractObject ?co
+. ?co pproc:contractEconomicConditions ?cec
+. ?cec pproc:budgetPrice ?budget 
+. ?budget gr:hasCurrencyValue ?budgetPrice
+}
+ORDER BY DESC(?budgetPrice)
+LIMIT 50
