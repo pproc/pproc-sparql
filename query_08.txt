@@ -1,0 +1,18 @@
+List of steps taken by a contract
+
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX pc: <http://purl.org/procurement/public-contracts#>
+SELECT distinct ?uriCont ?tenderDossierStartDate ?awardDate ?formalizedDate
+WHERE {
+  ?uriCont a <http://contsem.unizar.es/def/sector-publico/pproc#Contract> ;
+  pproc:contractProcedureSpecifications ?contractProcedureSpecifications ;
+  pc:tender ?tender .
+  ?contractProcedureSpecifications pproc:tenderDossierStartDate ?tenderDossierStartDate .
+  OPTIONAL {
+    ?tender pproc:awardDate ?awardDate 
+  } .
+  OPTIONAL {
+    ?tender pproc:formalizedDate ?formalizedDate 
+  }
+}
