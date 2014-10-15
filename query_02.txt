@@ -1,0 +1,18 @@
+PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#> 
+PREFIX dcterms: <http://purl.org/dc/terms/> 
+PREFIX pc: <http://purl.org/procurement/public-contracts#> 
+PREFIX s: <http://schema.org/> 
+SELECT ?title ?awardDate ?Nombre
+WHERE {
+  ?contrat a pproc:WorksContract 
+. ?contrat dcterms:title ?title 
+. ?contrat pc:tender ?tender 
+. ?tender a pproc:AwardedTender 
+. ?tender pproc:awardDate ?awardDate
+  OPTIONAL {
+    ?tender pc:supplier ?supplier 
+  . ?supplier s:name ?Nombre
+  }
+}
+ORDER BY DESC(?awardDate)
+LIMIT 50
