@@ -1,78 +1,68 @@
 Budget volume in percentage of contracts awarded by each of the procedures provided for in the legislation.
 
-This question needs to be resolved through multiple queries and calculated later.
-
-1. Total annual of all procedures (open, negotiated and minor):
-
 PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
 PREFIX pc: <http://purl.org/procurement/public-contracts#>
 PREFIX gr: <http://purl.org/goodrelations/v1#>
-SELECT SUM(distinct ?impAdjudicacionConIVA) 
+SELECT ?openPrice*100/?totalPrice as ?OpenProcedures ?negotiatedPrice*100/?totalPrice as ?NegotiatedProcedures ?minorPrice*100/?totalPrice as ?MinorProcedures
+{
+
+{SELECT SUM(distinct ?impAdjudicacionConIVA) as ?totalPrice
 WHERE {
   ?uriCont a pproc:Contract;
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
-  ?tender pproc:formalizedDate ?formalizedDate.
   ?procedureType pproc:procedureType ?procedure.
-  ?tender pproc:offeredPrice ?offeredPriceVAT.
-  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  ?tender pproc:formalizedDate ?formalizedDate.
+  ?uriCont pproc:contractObject/pproc:contractEconomicConditions ?cce.
+  ?cce pproc:budgetPrice ?priceVAT .
+  ?priceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014") AND ?procedure IN (pproc:RegularOpen, pproc:Negotiated, pproc:Minor))
-}
+}}
 
-2. Total annual of open procedures:
-
-PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
-PREFIX pc: <http://purl.org/procurement/public-contracts#>
-PREFIX gr: <http://purl.org/goodrelations/v1#>
-SELECT SUM(distinct ?impAdjudicacionConIVA)
+{SELECT SUM(distinct ?impAdjudicacionConIVA) as ?openPrice
 WHERE {
   ?uriCont a pproc:Contract;
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
   ?procedureType pproc:procedureType ?procedure.
-  ?tender pproc:offeredPrice ?offeredPriceVAT.
-  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  ?uriCont pproc:contractObject/pproc:contractEconomicConditions ?cce.
+  ?cce pproc:budgetPrice ?priceVAT .
+  ?priceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
          AND (?procedure = pproc:RegularOpen) )
-}
+}}
 
-3. Total annual of negotiated procedures:
-
-PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
-PREFIX pc: <http://purl.org/procurement/public-contracts#>
-PREFIX gr: <http://purl.org/goodrelations/v1#>
-SELECT SUM(distinct ?impAdjudicacionConIVA)
+{SELECT SUM(distinct ?impAdjudicacionConIVA) as ?negotiatedPrice
 WHERE {
   ?uriCont a pproc:Contract;
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
   ?procedureType pproc:procedureType ?procedure.
-  ?tender pproc:offeredPrice ?offeredPriceVAT.
-  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  ?uriCont pproc:contractObject/pproc:contractEconomicConditions ?cce.
+  ?cce pproc:budgetPrice ?priceVAT .
+  ?priceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
          AND (?procedure = pproc:Negotiated) )
-}
+}}
 
-4. Total annual of minor procedures:
-
-PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
-PREFIX pc: <http://purl.org/procurement/public-contracts#>
-PREFIX gr: <http://purl.org/goodrelations/v1#>
-SELECT SUM(distinct ?impAdjudicacionConIVA)
+{SELECT SUM(distinct ?impAdjudicacionConIVA) as ?minorPrice
 WHERE {
   ?uriCont a pproc:Contract;
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
   ?procedureType pproc:procedureType ?procedure.
-  ?tender pproc:offeredPrice ?offeredPriceVAT.
-  ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
+  ?uriCont pproc:contractObject/pproc:contractEconomicConditions ?cce.
+  ?cce pproc:budgetPrice ?priceVAT .
+  ?priceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
          AND (?procedure = pproc:Minor) )
+}}
+
 }
