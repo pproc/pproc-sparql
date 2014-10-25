@@ -1,4 +1,4 @@
-URI and names of managing department with most contracts
+URI and names of the managing department, ordered by the number of contracts in a descending order
 
 PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
