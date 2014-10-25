@@ -13,14 +13,11 @@ WHERE {
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
-  ?procedureType pproc:procedureType ?procedimiento.
+  ?procedureType pproc:procedureType ?procedure.
   ?tender pproc:offeredPrice ?offeredPriceVAT.
   ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
-  FILTER (regex(?formalizedDate, "2014") AND 
-         (?procedimiento = pproc:RegularOpen OR 
-         ?procedimiento = pproc:Negotiated OR 
-         ?procedimiento = pproc:Minor ) )
+  FILTER (regex(?formalizedDate, "2014") AND ?procedure IN (pproc:RegularOpen, pproc:Negotiated, pproc:Minor))
 }
 
 2. Total annual of open procedures:
@@ -34,12 +31,12 @@ WHERE {
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
-  ?procedureType pproc:procedureType ?procedimiento.
+  ?procedureType pproc:procedureType ?procedure.
   ?tender pproc:offeredPrice ?offeredPriceVAT.
   ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
-         AND (?procedimiento = pproc:RegularOpen) )
+         AND (?procedure = pproc:RegularOpen) )
 }
 
 3. Total annual of negotiated procedures:
@@ -53,12 +50,12 @@ WHERE {
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
-  ?procedureType pproc:procedureType ?procedimiento.
+  ?procedureType pproc:procedureType ?procedure.
   ?tender pproc:offeredPrice ?offeredPriceVAT.
   ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
-         AND (?procedimiento = pproc:Negotiated) )
+         AND (?procedure = pproc:Negotiated) )
 }
 
 4. Total annual of minor procedures:
@@ -72,10 +69,10 @@ WHERE {
   pproc:contractProcedureSpecifications ?procedureType;
   pc:tender ?tender.
   ?tender pproc:formalizedDate ?formalizedDate.
-  ?procedureType pproc:procedureType ?procedimiento.
+  ?procedureType pproc:procedureType ?procedure.
   ?tender pproc:offeredPrice ?offeredPriceVAT.
   ?offeredPriceVAT gr:hasCurrencyValue ?impAdjudicacionConIVA;
   gr:valueAddedTaxIncluded "true"^^xsd:boolean.
   FILTER (regex(?formalizedDate, "2014")
-         AND (?procedimiento = pproc:Minor) )
+         AND (?procedure = pproc:Minor) )
 }
