@@ -2,10 +2,10 @@ List of contracts grouped by managing department (i.e. water and sewer, gardenin
 
 PREFIX pproc: <http://contsem.unizar.es/def/sector-publico/pproc#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
-SELECT DISTINCT ?uriCont ?title
+SELECT DISTINCT ?managingDepartment ?title ?uriCont
 WHERE {
   ?uriCont a <http://contsem.unizar.es/def/sector-publico/pproc#Contract> ;
   pproc:managingDepartment ?managingDepartment .
   ?managingDepartment dcterms:title ?title
 }
-ORDER BY ?title
+GROUP BY ?managingDepartment ?title
